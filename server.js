@@ -28,6 +28,9 @@ const swaggerOptions = {
     apis: ["./routes/*.js"],
 };
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
+app.get("/", (req, res) => {
+    res.json({ message: "Berhasil konek ke API" });
+});
 
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
