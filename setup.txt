@@ -1,0 +1,2 @@
+sudo docker build -t siskeu-api-service .
+sudo docker run -d --name siskeu_api_service --env-file .env -p 3000:3000 siskeu-api-service
