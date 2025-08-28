@@ -11,26 +11,25 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 
-// Swagger setup
-const swaggerOptions = {
-    definition: {
-        openapi: "3.0.0",
-        info: {
-            title: "SISKEU REST API",
-            version: "1.0.0",
-            description: "Dokumentasi Siskeu API",
-        },
-    },
-    apis: ["./routes/*.js"],
-};
-const swaggerSpec = swaggerJsdoc(swaggerOptions);
-
-// Dynamic swagger servers
 app.use("/api-docs", (req, res, next) => {
-    const hostUrl = `${req.protocol}://${req.get("host")}`;
-    swaggerSpec.servers = [{ url: hostUrl }];
+    const swaggerOptions = {
+        definition: {
+            openapi: "3.0.0",
+            info: {
+                title: "SISKEU REST API",
+                version: "1.0.0",
+                description: "Dokumentasi Siskeu API",
+            },
+            servers: [
+                { url: `${req.protocol}://${req.get("host")}` },
+            ],
+        },
+        apis: ["./routes/*.js"],
+    };
+    const swaggerSpec = swaggerJsdoc(swaggerOptions);
     swaggerUi.setup(swaggerSpec)(req, res, next);
 }, swaggerUi.serve);
+
 
 // Routes
 app.use("/api/auth", authRoutes);
