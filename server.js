@@ -20,13 +20,17 @@ const swaggerOptions = {
             version: "1.0.0",
             description: "Dokumentasi Siskeu API",
         },
-        servers: [{ url: `http://localhost:${process.env.PORT}` }],
     },
     apis: ["./routes/*.js"],
 };
 const swaggerSpec = swaggerJsdoc(swaggerOptions);
 
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Dynamic swagger servers
+app.use("/api-docs", (req, res, next) => {
+    const hostUrl = `${req.protocol}://${req.get("host")}`;
+    swaggerSpec.servers = [{ url: hostUrl }];
+    swaggerUi.setup(swaggerSpec)(req, res, next);
+}, swaggerUi.serve);
 
 // Routes
 app.use("/api/auth", authRoutes);
