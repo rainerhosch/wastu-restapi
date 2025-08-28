@@ -1,0 +1,15 @@
+# version: "3.9"
+services:
+  app:
+    build: .
+    container_name: siskeu_api_service
+    restart: always
+    ports:
+      - "3000:3000"
+    env_file: .env
+    networks:
+      - siskeu_net
+
+networks:
+  siskeu_net:
+    driver: bridge

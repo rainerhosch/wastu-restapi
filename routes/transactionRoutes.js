@@ -9,6 +9,19 @@ const transactionController = require("../controllers/transaction/transactionCon
  *   description: API transaksi user
  */
 
+
+/**
+ * @swagger
+ * /api/transactions/next-id:
+ *   get:
+ *     summary: Generate transaction ID
+ *     tags: [Transactions]
+ *     responses:
+ *       200:
+ *         description: Generate transaction ID
+ */
+router.get("/next-id", transactionController.nextTransactionId);
+
 /**
  * @swagger
  * /api/transactions:
@@ -43,10 +56,35 @@ router.get("/:id", transactionController.getTransactionById);
  *           schema:
  *             type: object
  *             properties:
- *               amount:
- *                 type: number
- *               description:
+ *               semester:
  *                 type: string
+ *                 example: 20251
+ *               nim:
+ *                 type: string
+ *                 example: 141351069
+ *               transaksi_ke:
+ *                 type: integer
+ *               rekening_trf:
+ *                 type: integer
+ *                 example: 1
+ *               detail_transaksi:
+ *                 type: array
+ *                 description: Daftar detail transaksi
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     id_transaksi:
+ *                       type: string
+ *                       example: "2025080001"
+ *                     id_jenis_pembayaran:
+ *                       type: integer
+ *                       example: 2
+ *                     jml_bayar:
+ *                       type: number
+ *                       example: 1500000
+ *                     potongan:
+ *                       type: number
+ *                       example: 0
  *     responses:
  *       201:
  *         description: Transaksi berhasil dibuat
