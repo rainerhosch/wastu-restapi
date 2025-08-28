@@ -6,10 +6,22 @@ const userRoutes = require("./routes/userRoutes");
 const authRoutes = require("./routes/authRoutes");
 const transactionRoutes = require("./routes/transactionRoutes");
 const authMiddleware = require("./middleware/authMiddleware");
+const cors = require('cors');
 
 dotenv.config();
 const app = express();
+
 app.use(express.json());
+
+// CORS Policy
+app.use(cors()); // allow all origins
+
+// CORS Policy for specific origin
+// app.use(cors({
+//     origin: "https://kueapi.wastukancana.ac.id",
+//     methods: ["GET", "POST", "PUT", "DELETE"],
+//     allowedHeaders: ["Content-Type", "Authorization"],
+// }));
 
 // Swagger setup
 const swaggerOptions = {
@@ -23,6 +35,7 @@ const swaggerOptions = {
         servers: [
             { url: `https://kueapi.wastukancana.ac.id` },
             { url: `http://180.178.111.253:${process.env.PORT}` },
+            { url: `http://localhost:${process.env.PORT}` },
         ],
     },
     apis: ["./routes/*.js"],
