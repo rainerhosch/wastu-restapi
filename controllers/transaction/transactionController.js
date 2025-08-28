@@ -80,9 +80,11 @@ exports.createTransaction = async (req, res) => {
         //     return res.status(400).json({ message: "Amount is required" });
         // }
 
+        // Menggunakan zona waktu Jakarta (Asia/Jakarta)
         const now = new Date();
-        const tanggal = now.toISOString().split("T")[0]; // YYYY-MM-DD
-        const jam = now.toTimeString().split(" ")[0];   // HH:MM:SS
+        const jakartaDate = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Jakarta" }));
+        const tanggal = jakartaDate.toISOString().split("T")[0]; // YYYY-MM-DD
+        const jam = jakartaDate.toTimeString().split(" ")[0];   // HH:MM:SS
 
         const id_transaksi = await generateTransactionIdHelper();
 
