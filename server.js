@@ -34,8 +34,7 @@ const swaggerOptions = {
         },
         servers: [
             { url: `https://kueapi.wastukancana.ac.id` },
-            { url: `http://180.178.111.253:${process.env.PORT}` },
-            { url: `http://localhost:${process.env.PORT}` },
+            { url: `http://localhost:${process.env.PORT}`}
         ],
     },
     apis: ["./routes/*.js"],
@@ -53,5 +52,5 @@ app.use("/api/users", authMiddleware, userRoutes); // ✅ semua /users harus log
 app.use("/api/transactions", transactionRoutes);
 
 app.listen(process.env.PORT, () =>
-    console.log(`Server running on http://180.178.111.253:${process.env.PORT}`)
+    console.log(`Server running on http://localhost:${process.env.PORT}`)
 );
