@@ -74,6 +74,7 @@ exports.getTransactionById = async (req, res) => {
 // Create new transaction
 exports.createTransaction = async (req, res) => {
     const conn = await pool.getConnection();
+    const conn_dewa = await pool_dewa.getConnection();
     try {
         const { semester, nim, transaksi_ke, rekening_trf, detail_transaksi } = req.body;
         // if (!amount) {
@@ -89,6 +90,7 @@ exports.createTransaction = async (req, res) => {
         const id_transaksi = await generateTransactionIdHelper();
 
         await conn.beginTransaction();
+        await conn_dewa.beginTransaction();
         // insert ke transaksi (header)
         const queryTx = `
         INSERT INTO transaksi 
@@ -97,6 +99,22 @@ exports.createTransaction = async (req, res) => {
         `;
 
         await conn.query(queryTx, [
+            id_transaksi,
+            tanggal,
+            jam,
+            semester,
+            nim,
+            22,
+            1,
+            transaksi_ke,
+            1,
+            3,
+            rekening_trf,
+            tanggal,
+            jam,
+            null
+        ])
+        await conn_dewa.query(queryTx, [
             id_transaksi,
             tanggal,
             jam,
@@ -130,8 +148,15 @@ exports.createTransaction = async (req, res) => {
                 d.jml_bayar,
                 d.potongan || 0
             ]);
+            await conn_dewa.query(queryTxDetail, [
+                id_transaksi,
+                d.id_jenis_pembayaran,
+                d.jml_bayar,
+                d.potongan || 0
+            ]);
         }
         await conn.commit();
+        await conn_dewa.commit();
 
         res.status(201).json({
             message: "Transaction created successfully",
