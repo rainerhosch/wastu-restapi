@@ -3,6 +3,8 @@ const {
     getAllTransactions,
     getTransactionById,
     createTransaction,
+    updateTransactionStatus,
+    deleteTransaction,
 } = require("../../models/transactionModel");
 
 exports.nextTransactionId = async (req, res) => {
@@ -67,6 +69,31 @@ exports.createTransaction = async (req, res) => {
             id_transaksi,
             detail_transaksi,
         });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.updateTransaction = async (req, res) => {
+    try {
+        const { status } = req.body;
+        const userId = req.user?.id || 22;
+
+        const result = await updateTransactionStatus(req.params.id, userId, status);
+        res.json(result);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
+exports.deleteTransaction = async (req, res) => {
+    try {
+        const userId = req.user?.id || 22;
+
+        const success = await deleteTransaction(req.params.id, userId);
+        if (success) {
+            res.json({ message: "Transaction deleted" });
+        }
     } catch (err) {
         res.status(500).json({ error: err.message });
     }

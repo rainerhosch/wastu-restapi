@@ -100,9 +100,76 @@ async function createTransaction(header, details) {
     }
 }
 
+// Update status transaksi di dua DB
+async function updateTransactionStatus(id_transaksi, user_id, status) {
+    const conn = await mainDbPool.getConnection();
+    const connDewa = await dewaDbPool.getConnection();
+
+    try {
+        await conn.beginTransaction();
+        await connDewa.beginTransaction();
+
+        const query = "UPDATE transaksi SET status_transaksi = ? WHERE id_transaksi = ? AND user_id = ?";
+        const values = [status, id_transaksi, user_id];
+
+        const [resultMain] = await conn.query(query, values);
+        const [resultDewa] = await connDewa.query(query, values);
+
+        if (resultMain.affectedRows === 0 || resultDewa.affectedRows === 0) {
+            throw new Error("Transaction not found or not updated in one of the databases");
+        }
+
+        await conn.commit();
+        await connDewa.commit();
+        return { id_transaksi, status };
+    } catch (err) {
+        await conn.rollback();
+        await connDewa.rollback();
+        throw err;
+    } finally {
+        conn.release();
+        connDewa.release();
+    }
+}
+
+// Delete transaksi di dua DB
+async function deleteTransaction(id_transaksi, user_id) {
+    const conn = await mainDbPool.getConnection();
+    const connDewa = await dewaDbPool.getConnection();
+
+    try {
+        await conn.beginTransaction();
+        await connDewa.beginTransaction();
+
+        const query = "DELETE FROM transaksi WHERE id_transaksi = ? AND user_id = ?";
+        const values = [id_transaksi, user_id];
+
+        const [resultMain] = await conn.query(query, values);
+        const [resultDewa] = await connDewa.query(query, values);
+
+        if (resultMain.affectedRows === 0 || resultDewa.affectedRows === 0) {
+            throw new Error("Transaction not found or not deleted in one of the databases");
+        }
+
+        await conn.commit();
+        await connDewa.commit();
+        return true;
+    } catch (err) {
+        await conn.rollback();
+        await connDewa.rollback();
+        throw err;
+    } finally {
+        conn.release();
+        connDewa.release();
+    }
+}
+
+
 module.exports = {
     generateTransactionId,
     getAllTransactions,
     getTransactionById,
     createTransaction,
+    updateTransactionStatus,
+    deleteTransaction,
 };
