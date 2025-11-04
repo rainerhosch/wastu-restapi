@@ -150,6 +150,7 @@ module.exports = {
     getTunggakan,
     getTunggakanMhs,
     getTunggakanByNimAndJenis,
+    deleteTunggakanByNimAndJenis,
     createTunggakan,
     updateTunggakan,
     deleteTunggakan,
