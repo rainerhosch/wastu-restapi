@@ -6,6 +6,11 @@ const {
     updateTransactionStatus,
     deleteTransaction,
 } = require("../../models/transactionModel");
+const {
+    getTunggakanByNimAndJenis,
+    updateTunggakan,
+    deleteTunggakan,
+} = require("../../models/tunggakanModels");
 
 exports.nextTransactionId = async (req, res) => {
     try {
@@ -63,6 +68,17 @@ exports.createTransaction = async (req, res) => {
         };
 
         await createTransaction(header, detail_transaksi);
+
+        for (const d of detail_transaksi) {
+            if (d.id_jenis_pembayaran === 6) {
+                const tunggakan = await getTunggakanByNimAndJenis(nim, d.id_jenis_pembayaran);
+                if(d.jml_bayar === tunggakan[0].jumlah_tunggakan) {
+                    await deleteTunggakan(tunggakan[0].id_tunggakan);
+                } else {
+                    await updateTunggakan(tunggakan[0].id_tunggakan, { jumlah_tunggakan: tunggakan[0].jumlah_tunggakan - d.jml_bayar });
+                }
+            }
+        }
 
         res.status(201).json({
             message: "Transaction created successfully",
