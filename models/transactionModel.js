@@ -1,4 +1,6 @@
 const { mainDbPool, dewaDbPool } = require("../utils/db");
+const { deleteTunggakanByNimAndJenis } = require("./tunggakanModels");
+
 
 async function generateTransactionId() {
     const now = new Date();
@@ -85,6 +87,12 @@ async function createTransaction(header, details) {
             ];
             await conn.query(queryDetail, values);
             await connDewa.query(queryDetail, values);
+
+            // Hapus tunggakan jika jenis pembayaran cocok
+            if (parseInt(d.id_jenis_pembayaran) === 6) {
+                await deleteTunggakanByNimAndJenis(header.nim, d.id_jenis_pembayaran, conn, connDewa);
+            }
+
         }
 
         await conn.commit();

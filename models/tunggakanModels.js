@@ -103,6 +103,17 @@ async function updateTunggakan(id, tunggakan) {
     }
 }
 
+// DELETE: Tunggakan berdasarkan NIM dan jenis
+async function deleteTunggakanByNimAndJenis(nim, jenis_tunggakan, conn, connDewa) {
+    const query = "DELETE FROM tunggakan WHERE nim = ? AND jenis_tunggakan = ?";
+    const values = [nim, jenis_tunggakan];
+
+    const [resMain] = await conn.query(query, values);
+    const [resDewa] = await connDewa.query(query, values);
+
+    return resMain.affectedRows + resDewa.affectedRows;
+}
+
 // DELETE: Tunggakan ke dua DB dengan rollback
 async function deleteTunggakan(id) {
     const conn = await mainDbPool.getConnection();
