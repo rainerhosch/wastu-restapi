@@ -18,7 +18,7 @@ app.use(cors()); // allow all origins
 
 // CORS Policy for specific origin
 // app.use(cors({
-//     origin: "https://kueapi.wastukancana.ac.id",
+//     origin: "https://siskeu-api.wastukancana.ac.id",
 //     methods: ["GET", "POST", "PUT", "DELETE"],
 //     allowedHeaders: ["Content-Type", "Authorization"],
 // }));
@@ -33,8 +33,8 @@ const swaggerOptions = {
             description: "Dokumentasi Siskeu API",
         },
         servers: [
-            { url: `https://kueapi.wastukancana.ac.id` },
-            { url: `http://localhost:${process.env.PORT}`}
+            { url: `https://siskeu-api.wastukancana.ac.id` },
+            { url: `http://localhost:${process.env.PORT}` }
         ],
     },
     apis: ["./routes/*.js"],
