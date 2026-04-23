@@ -33,7 +33,7 @@ const swaggerOptions = {
             description: "Dokumentasi Siskeu API",
         },
         servers: [
-            { url: `https://siskeu-api.wastukancana.ac.id` },
+            { url: process.env.SERVER_URL || `https://siskeu-api.wastukancana.ac.id` },
             { url: `http://localhost:${process.env.PORT}` }
         ],
     },
