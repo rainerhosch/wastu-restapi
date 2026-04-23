@@ -1,2 +1,9 @@
+# Opsi 1: Menggunakan docker run biasa
+sudo docker stop siskeu_api_service
+sudo docker rm siskeu_api_service
 sudo docker build -t siskeu-api-service .
 sudo docker run -d --name siskeu_api_service --env-file .env -p 3000:3000 siskeu-api-service
+
+# Opsi 2 (Lebih Mudah): Menggunakan docker-compose
+# Cukup jalankan perintah ini (akan otomatis rebuild dan mereplace container lama)
+sudo docker compose up -d --build
